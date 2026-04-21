@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEM Education Uz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Sora:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --bg2: #0a0a0a;
+    --surface: rgba(255,255,255,0.04);
+    --surface-hover: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.1);
+    --border-strong: rgba(255,255,255,0.2);
+    --text: #ffffff;
+    --text-muted: rgba(255,255,255,0.55);
+    --text-subtle: rgba(255,255,255,0.35);
+    --accent: #0a84ff;
+    --accent2: #30d158;
+    --accent3: #bf5af2;
+    --glow: rgba(10,132,255,0.3);
+    --glass: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.12);
+    --radius: 20px;
+    --radius-sm: 12px;
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .light-mode {
+    --bg: #f5f5f7;
+    --bg2: #ffffff;
+    --surface: rgba(0,0,0,0.04);
+    --surface-hover: rgba(0,0,0,0.08);
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1d1d1f;
+    --text-muted: rgba(0,0,0,0.55);
+    --text-subtle: rgba(0,0,0,0.35);
+    --glow: rgba(10,132,255,0.15);
+    --glass: rgba(255,255,255,0.7);
+    --glass-border: rgba(0,0,0,0.08);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.5s ease, color 0.5s ease;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: normal;
+  }
+  .cursor-follower {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(10,132,255,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+  body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
+  body:has(a:hover) .cursor-follower, body:has(button:hover) .cursor-follower { width: 60px; height: 60px; border-color: var(--accent); }
+
+  /* Ambient orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbFloat 12s ease-in-out infinite;
+  }
+  .orb1 { width: 500px; height: 500px; background: rgba(10,132,255,0.12); top: -100px; right: -100px; animation-delay: 0s; }
+  .orb2 { width: 400px; height: 400px; background: rgba(191,90,242,0.08); bottom: 20%; left: -150px; animation-delay: -4s; }
+  .orb3 { width: 350px; height: 350px; background: rgba(48,209,88,0.07); top: 50%; right: 10%; animation-delay: -8s; }
+  @keyframes orbFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-40px) scale(1.05); }
+  }
+
+  /* Navbar */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    transition: var(--transition);
+  }
+  .light-mode nav { background: rgba(245,245,247,0.8); }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.5px;
+    color: var(--text); text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    color: var(--text-muted); text-decoration: none;
+    padding: 6px 14px; border-radius: 8px;
+    font-size: 14px; font-weight: 500;
+    transition: var(--transition); cursor: none;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-hover); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+
+  /* Language selector */
+  .lang-selector {
+    display: flex; gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .lang-btn {
+    background: none; border: none; color: var(--text-muted);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 7px;
+    cursor: none; transition: var(--transition);
+    letter-spacing: 0.3px;
+  }
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--accent); color: #fff;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 44px; height: 26px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    position: relative; cursor: none;
+    transition: var(--transition);
+  }
+  .theme-toggle::after {
+    content: ''; position: absolute;
+    width: 20px; height: 20px;
+    background: var(--text); border-radius: 50%;
+    top: 2px; left: 2px;
+    transition: transform 0.3s ease, background 0.3s;
+    font-size: 12px; display: flex; align-items: center; justify-content: center;
+  }
+  .light-mode .theme-toggle::after { transform: translateX(18px); background: #1d1d1f; }
+  .theme-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+  /* Pages */
+  .page { display: none; min-height: 100vh; padding-top: 64px; position: relative; z-index: 1; }
+  .page.active { display: block; }
+
+  /* Hero */
+  .hero {
+    min-height: calc(100vh - 64px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    position: relative; overflow: hidden;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--accent);
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent2); animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  .hero h1 {
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.0;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s ease 0.1s both;
+    background: linear-gradient(135deg, var(--text) 0%, rgba(255,255,255,0.6) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .light-mode .hero h1 {
+    background: linear-gradient(135deg, #1d1d1f 0%, rgba(0,0,0,0.5) 100%);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .hero-subtitle-accent {
+    font-size: clamp(48px, 7.5vw, 88px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.0;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease 0.2s both;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent3) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 18px; font-weight: 300;
+    color: var(--text-muted); max-width: 560px;
+    line-height: 1.7; margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .hero-btns {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--accent);
+    color: #fff; border: none;
+    padding: 14px 32px; border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: none; transition: var(--transition);
+    box-shadow: 0 0 30px rgba(10,132,255,0.4);
+  }
+  .btn-primary:hover { background: #0071e3; transform: translateY(-2px); box-shadow: 0 0 50px rgba(10,132,255,0.6); }
+  .btn-secondary {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    color: var(--text); border: 1px solid var(--glass-border);
+    padding: 14px 32px; border-radius: 100px;
+    font-family: 'Sora', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: none; transition: var(--transition);
+  }
+  .btn-secondary:hover { background: var(--surface-hover); border-color: var(--border-strong); transform: translateY(-2px); }
+
+  /* Grid stats */
+  .stats-row {
+    display: flex; gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 80px 40px 0;
+    backdrop-filter: blur(20px);
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+  .stat {
+    flex: 1;
+    background: var(--glass);
+    padding: 32px 24px;
+    text-align: center;
+    transition: var(--transition);
+  }
+  .stat:hover { background: var(--surface-hover); }
+  .stat-num {
+    font-size: 42px; font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--text), var(--text-muted));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+
+  /* Section */
+  .section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 16px; display: block;
+  }
+  .section h2 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800; letter-spacing: -2px;
+    line-height: 1.1; margin-bottom: 20px;
+  }
+  .section p { font-size: 17px; color: var(--text-muted); line-height: 1.7; max-width: 640px; }
+
+  /* Glass cards */
+  .glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    overflow: hidden;
+  }
+  .glass-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  /* Courses page */
+  .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 60px; }
+  .course-card { padding: 40px; position: relative; overflow: hidden; }
+  .course-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--glow), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .course-card:hover::before { opacity: 1; }
+  .course-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin-bottom: 24px;
+  }
+  .icon-blue { background: linear-gradient(135deg, rgba(10,132,255,0.3), rgba(10,132,255,0.1)); border: 1px solid rgba(10,132,255,0.3); }
+  .icon-green { background: linear-gradient(135deg, rgba(48,209,88,0.3), rgba(48,209,88,0.1)); border: 1px solid rgba(48,209,88,0.3); }
+  .icon-purple { background: linear-gradient(135deg, rgba(191,90,242,0.3), rgba(191,90,242,0.1)); border: 1px solid rgba(191,90,242,0.3); }
+  .course-card h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .course-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; }
+  .course-tag {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.5px; color: var(--text-muted);
+    margin-right: 6px; margin-bottom: 6px;
+  }
+  .coming-soon-banner {
+    background: linear-gradient(135deg, rgba(191,90,242,0.2), rgba(10,132,255,0.2));
+    border: 1px solid rgba(191,90,242,0.3);
+    border-radius: var(--radius);
+    padding: 40px; text-align: center; margin-top: 32px;
+  }
+  .coming-soon-banner h3 { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+  .coming-soon-banner p { color: var(--text-muted); font-size: 15px; }
+
+  /* About page */
+  .about-hero {
+    padding: 80px 40px 0;
+    text-align: center; max-width: 800px; margin: 0 auto;
+  }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 60px; padding: 0 40px 60px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+  .about-card { padding: 40px; }
+  .about-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  .about-card p { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+  .values-section { padding: 60px 40px; max-width: 1100px; margin: 0 auto; }
+  .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+  .value-item { padding: 32px; text-align: center; }
+  .value-emoji { font-size: 36px; margin-bottom: 16px; display: block; }
+  .value-item h4 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .value-item p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .team-section { padding: 60px 40px; max-width: 1100px; margin: 0 auto; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 40px; }
+  .team-card { padding: 32px; text-align: center; }
+  .team-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700;
+    border: 2px solid var(--border-strong);
+  }
+  .team-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .team-card span { font-size: 13px; color: var(--accent); font-weight: 500; }
+
+  /* Contact page */
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 48px; padding: 80px 40px; max-width: 1100px; margin: 0 auto;
+    align-items: start;
+  }
+  .contact-info h1 { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 20px; line-height: 1.1; }
+  .contact-info p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; }
+  .contact-item { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .contact-icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .contact-item p { font-size: 14px; color: var(--text-muted); margin: 0; font-weight: 500; }
+  .contact-form { padding: 40px; }
+  .contact-form h2 { font-size: 24px; font-weight: 700; margin-bottom: 32px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.3px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    transition: border-color 0.3s;
+    outline: none;
+    appearance: none;
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-subtle); }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,132,255,0.15); }
+  .form-group textarea { min-height: 120px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .submit-btn {
+    width: 100%; background: var(--accent); color: #fff; border: none;
+    padding: 16px; border-radius: var(--radius-sm);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: none; transition: var(--transition);
+    box-shadow: 0 0 30px rgba(10,132,255,0.4);
+    margin-top: 8px;
+  }
+  .submit-btn:hover { background: #0071e3; transform: translateY(-2px); box-shadow: 0 8px 40px rgba(10,132,255,0.5); }
+
+  /* Scroll animations */
+  .fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* Page transition */
+  .page-transition {
+    position: fixed; inset: 0; background: var(--accent);
+    z-index: 9000; transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .page-transition.active { transform: translateY(0); }
+  .page-transition.exit { transform: translateY(-100%); }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 0 40px; }
+
+  /* Footer */
+  footer {
+    padding: 40px; text-align: center;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted); font-size: 13px;
+    margin-top: 40px;
+  }
+  footer span { color: var(--accent); }
+
+  /* Floating particles */
+  .particle {
+    position: fixed; border-radius: 50%;
+    pointer-events: none; z-index: 0;
+    animation: floatParticle linear infinite;
+    opacity: 0.3;
+  }
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Grid lines background */
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .light-mode .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--glass); backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 100px; padding: 14px 28px;
+    font-size: 14px; font-weight: 600;
+    z-index: 8000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Nav mobile */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero h1 { letter-spacing: -2px; }
+    .hero-subtitle-accent { letter-spacing: -2px; }
+    .stats-row { flex-direction: column; margin: 40px 20px 0; }
+    .about-grid { grid-template-columns: 1fr; padding: 0 20px 40px; }
+    .values-grid { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; padding: 40px 20px; }
+    .section { padding: 60px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .courses-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="page-transition" id="pageTransition"></div>
+<div class="toast" id="toast">✅ Message sent successfully!</div>
+
+<!-- Navbar -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <div class="nav-logo-icon">⚛</div>
+    <span>STEM Edu Uz</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" id="nav-home" href="#" onclick="showPage('home')">Home</a>
+    <a class="nav-link" id="nav-about" href="#" onclick="showPage('about')">About Us</a>
+    <a class="nav-link" id="nav-courses" href="#" onclick="showPage('courses')">Courses</a>
+    <a class="nav-link" id="nav-contact" href="#" onclick="showPage('contact')">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-selector">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('uz')">UZ</button>
+      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    </div>
+    <span class="theme-label" id="themeLabel">🌙</span>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></div>
+  </div>
+</nav>
+
+<!-- ===================== HOME PAGE ===================== -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-badge" data-t="badge">🚀 Launching in Uzbekistan</div>
+    <h1 data-t="hero-title">Future Starts</h1>
+    <div class="hero-subtitle-accent" data-t="hero-subtitle">Here & Now.</div>
+    <p data-t="hero-desc">World-class STEM education for the next generation of innovators, engineers, and scientists — available in three languages.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('courses')" data-t="explore-courses">Explore Courses →</button>
+      <button class="btn-secondary" onclick="showPage('about')" data-t="our-story">Our Story</button>
+    </div>
+  </section>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" data-count="3">0</div><div class="stat-label" data-t="stat-lang">Languages</div></div>
+    <div class="stat"><div class="stat-num" data-count="3">0</div><div class="stat-label" data-t="stat-courses">Courses Available</div></div>
+    <div class="stat"><div class="stat-num" data-count="100">0</div><div class="stat-label" data-t="stat-students">Students Enrolled</div></div>
+    <div class="stat"><div class="stat-num" data-count="5">0</div><div class="stat-label" data-t="stat-instructors">Expert Instructors</div></div>
+  </div>
+
+  <div class="section fade-in">
+    <span class="section-tag" data-t="why-tag">WHY STEM EDUCATION UZ</span>
+    <h2 data-t="why-title">Designed for<br>excellence.</h2>
+    <p data-t="why-desc">We combine rigorous AP-level curricula with modern pedagogy, delivered in your native language. Our platform is built for Uzbekistan's brightest minds.</p>
+  </div>
+
+  <div style="padding: 0 40px 100px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    <div class="glass-card fade-in" style="padding:36px;">
+      <div style="font-size:32px;margin-bottom:16px;">🌐</div>
+      <h3 style="font-size:19px;font-weight:700;margin-bottom:10px;" data-t="feat1-title">Trilingual Platform</h3>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;" data-t="feat1-desc">Full support for English, Uzbek, and Russian — switch seamlessly at any time.</p>
+    </div>
+    <div class="glass-card fade-in" style="padding:36px;">
+      <div style="font-size:32px;margin-bottom:16px;">🎓</div>
+      <h3 style="font-size:19px;font-weight:700;margin-bottom:10px;" data-t="feat2-title">AP-Level Curriculum</h3>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;" data-t="feat2-desc">College Board aligned courses that prepare students for international academic success.</p>
+    </div>
+    <div class="glass-card fade-in" style="padding:36px;">
+      <div style="font-size:32px;margin-bottom:16px;">⚡</div>
+      <h3 style="font-size:19px;font-weight:700;margin-bottom:10px;" data-t="feat3-title">Live & Async Learning</h3>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;" data-t="feat3-desc">Flexible scheduling for live sessions and on-demand content to fit your lifestyle.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 <span>STEM Education Uz</span>. All rights reserved. Built for the future of Uzbekistan. 🇺🇿</p>
+  </footer>
+</div>
+
+<!-- ===================== ABOUT PAGE ===================== -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <span class="section-tag" style="display:block;text-align:center;margin-top:40px;" data-t="about-tag">OUR MISSION</span>
+    <h1 style="font-size:clamp(40px,6vw,64px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;" data-t="about-title">Empowering Uzbekistan<br>Through STEM.</h1>
+    <p style="font-size:17px;color:var(--text-muted);line-height:1.7;max-width:600px;margin:0 auto 40px;" data-t="about-desc">We believe every student in Uzbekistan deserves access to world-class science, technology, engineering, and mathematics education — in their own language.</p>
+  </div>
+
+  <div class="about-grid">
+    <div class="glass-card about-card fade-in">
+      <div style="font-size:28px;margin-bottom:16px;">🎯</div>
+      <h3 data-t="mission-title">Our Mission</h3>
+      <p data-t="mission-desc">To democratize high-quality STEM education across Uzbekistan, removing language barriers and geographic limitations so every student can reach their full potential.</p>
+    </div>
+    <div class="glass-card about-card fade-in">
+      <div style="font-size:28px;margin-bottom:16px;">🔭</div>
+      <h3 data-t="vision-title">Our Vision</h3>
+      <p data-t="vision-desc">A future where Uzbekistan is a global hub for scientific innovation, powered by a generation of students who learned to think critically and solve complex problems from day one.</p>
+    </div>
+    <div class="glass-card about-card fade-in">
+      <div style="font-size:28px;margin-bottom:16px;">📚</div>
+      <h3 data-t="approach-title">Our Approach</h3>
+      <p data-t="approach-desc">We combine the rigor of the College Board's AP curriculum with culturally relevant teaching methods, delivered by expert instructors who understand the Uzbek education landscape.</p>
+    </div>
+    <div class="glass-card about-card fade-in">
+      <div style="font-size:28px;margin-bottom:16px;">🌍</div>
+      <h3 data-t="impact-title">Our Impact</h3>
+      <p data-t="impact-desc">Since our founding, we have helped hundreds of students achieve top scores on AP exams and gain admission to leading universities worldwide, including programs in Europe and North America.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="values-section">
+    <span class="section-tag" data-t="values-tag">CORE VALUES</span>
+    <h2 style="font-size:clamp(32px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:0;" data-t="values-title">What we stand for.</h2>
+    <div class="values-grid" style="margin-top:40px;">
+      <div class="glass-card value-item fade-in"><span class="value-emoji">🧠</span><h4 data-t="val1">Critical Thinking</h4><p data-t="val1d">We teach students how to think, not what to think.</p></div>
+      <div class="glass-card value-item fade-in"><span class="value-emoji">🤝</span><h4 data-t="val2">Inclusivity</h4><p data-t="val2d">Education for everyone, regardless of background or location.</p></div>
+      <div class="glass-card value-item fade-in"><span class="value-emoji">🔬</span><h4 data-t="val3">Rigor</h4><p data-t="val3d">High standards that prepare students for global competition.</p></div>
+      <div class="glass-card value-item fade-in"><span class="value-emoji">💡</span><h4 data-t="val4">Innovation</h4><p data-t="val4d">Always improving our methods and technology.</p></div>
+      <div class="glass-card value-item fade-in"><span class="value-emoji">🌐</span><h4 data-t="val5">Multilingualism</h4><p data-t="val5d">Honoring Uzbekistan's linguistic diversity.</p></div>
+      <div class="glass-card value-item fade-in"><span class="value-emoji">🏆</span><h4 data-t="val6">Excellence</h4><p data-t="val6d">Striving for the best in everything we do.</p></div>
+    </div>
+  </div>
+
+  <div class="team-section">
+    <span class="section-tag" data-t="team-tag">THE TEAM</span>
+    <h2 style="font-size:clamp(32px,4vw,44px);font-weight:800;letter-spacing:-1.5px;margin-bottom:0;" data-t="team-title">Meet the educators.</h2>
+    <div class="team-grid" style="margin-top:40px;">
+      <div class="glass-card team-card fade-in"><div class="team-avatar">AI</div><h4>Aziz Ismoilov</h4><span data-t="role-cs">Lead CS Instructor</span></div>
+      <div class="glass-card team-card fade-in"><div class="team-avatar" style="background:linear-gradient(135deg,var(--accent2),var(--accent));">MK</div><h4>Malika Karimova</h4><span data-t="role-stats">Statistics Lead</span></div>
+      <div class="glass-card team-card fade-in"><div class="team-avatar" style="background:linear-gradient(135deg,var(--accent3),var(--accent));">JS</div><h4>Jasur Sotvoldiev</h4><span data-t="role-data">Data Analytics</span></div>
+      <div class="glass-card team-card fade-in"><div class="team-avatar" style="background:linear-gradient(135deg,var(--accent2),var(--accent3));">NR</div><h4>Nilufar Rашidova</h4><span data-t="role-curr">Curriculum Director</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 <span>STEM Education Uz</span>. All rights reserved. 🇺🇿</p>
+  </footer>
+</div>
+
+<!-- ===================== COURSES PAGE ===================== -->
+<div class="page" id="page-courses">
+  <div class="section" style="padding-bottom:0;">
+    <span class="section-tag" data-t="courses-tag">OUR CURRICULUM</span>
+    <h1 style="font-size:clamp(40px,6vw,64px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:20px;" data-t="courses-title">Courses built<br>for your future.</h1>
+    <p data-t="courses-desc">Each course follows the College Board's AP framework — rigorous, internationally recognized, and designed to open doors to top universities worldwide.</p>
+  </div>
+
+  <div style="padding: 0 40px 60px; max-width: 1100px; margin: 0 auto;">
+    <div class="courses-grid">
+      <div class="glass-card course-card fade-in">
+        <div class="course-icon icon-blue">💻</div>
+        <h3 data-t="cs-title">AP Computer Science</h3>
+        <p data-t="cs-desc">Master the fundamentals of programming with Java, explore object-oriented design, data structures, algorithms, and computational thinking. Equivalent to a first-semester university CS course.</p>
+        <div>
+          <span class="course-tag">Java</span>
+          <span class="course-tag">OOP</span>
+          <span class="course-tag">Algorithms</span>
+          <span class="course-tag">AP Exam Prep</span>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:12px;align-items:center;">
+          <button class="btn-primary" style="padding:10px 20px;font-size:13px;" onclick="showPage('contact')" data-t="enroll">Enroll Now</button>
+          <span style="font-size:13px;color:var(--text-muted);" data-t="level-inter">Intermediate</span>
+        </div>
+      </div>
+
+      <div class="glass-card course-card fade-in">
+        <div class="course-icon icon-green">📊</div>
+        <h3 data-t="stats-title">AP Statistics</h3>
+        <p data-t="stats-desc">Develop skills in collecting, analyzing, and drawing conclusions from data. Learn probability, statistical inference, and how to think statistically — essential for any science or business career.</p>
+        <div>
+          <span class="course-tag">Probability</span>
+          <span class="course-tag">Inference</span>
+          <span class="course-tag">Regression</span>
+          <span class="course-tag">AP Exam Prep</span>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:12px;align-items:center;">
+          <button class="btn-primary" style="padding:10px 20px;font-size:13px;" onclick="showPage('contact')" data-t="enroll">Enroll Now</button>
+          <span style="font-size:13px;color:var(--text-muted);" data-t="level-beg">Beginner Friendly</span>
+        </div>
+      </div>
+
+      <div class="glass-card course-card fade-in">
+        <div class="course-icon icon-purple">📈</div>
+        <h3 data-t="da-title">Data Analytics</h3>
+        <p data-t="da-desc">Learn to extract insights from real-world datasets using Python, pandas, and visualization libraries. Build projects that demonstrate skills employers and universities want to see.</p>
+        <div>
+          <span class="course-tag">Python</span>
+          <span class="course-tag">Pandas</span>
+          <span class="course-tag">Visualization</span>
+          <span class="course-tag">Real Projects</span>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:12px;align-items:center;">
+          <button class="btn-primary" style="padding:10px 20px;font-size:13px;" onclick="showPage('contact')" data-t="enroll">Enroll Now</button>
+          <span style="font-size:13px;color:var(--text-muted);" data-t="level-inter">Intermediate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="coming-soon-banner fade-in" style="margin-top:40px;">
+      <div style="font-size:40px;margin-bottom:16px;">🔮</div>
+      <h3 data-t="soon-title">More Courses Coming Soon</h3>
+      <p data-t="soon-desc">AP Calculus, AP Physics, AP Chemistry, Machine Learning & AI — we're building the most comprehensive STEM catalog in Central Asia.</p>
+      <button class="btn-secondary" style="margin-top:24px;" onclick="showPage('contact')" data-t="notify-me">Notify Me →</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 <span>STEM Education Uz</span>. All rights reserved. 🇺🇿</p>
+  </footer>
+</div>
+
+<!-- ===================== CONTACT PAGE ===================== -->
+<div class="page" id="page-contact">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <span class="section-tag" data-t="contact-tag">GET IN TOUCH</span>
+      <h1 data-t="contact-title">Let's talk about your future.</h1>
+      <p data-t="contact-desc">Whether you're a student, parent, or partner institution — we'd love to hear from you. Fill out the form or reach us directly.</p>
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div><p style="font-size:12px;color:var(--text-subtle);margin-bottom:2px;" data-t="email-label">Email</p><p>hello@stemeducationuz.com</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📱</div>
+        <div><p style="font-size:12px;color:var(--text-subtle);margin-bottom:2px;" data-t="phone-label">Phone</p><p>+998 90 000 00 00</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div><p style="font-size:12px;color:var(--text-subtle);margin-bottom:2px;" data-t="addr-label">Location</p><p>Tashkent, Uzbekistan 🇺🇿</p></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div><p style="font-size:12px;color:var(--text-subtle);margin-bottom:2px;" data-t="hours-label">Hours</p><p data-t="hours-val">Mon–Fri, 9AM – 6PM (UZT)</p></div>
+      </div>
+    </div>
+
+    <div class="glass-card contact-form fade-in">
+      <h2 data-t="form-title">Send us a message</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-t="fname">First Name</label>
+          <input type="text" id="fname" data-placeholder-t="fname-ph" placeholder="Aziz">
+        </div>
+        <div class="form-group">
+          <label data-t="lname">Last Name</label>
+          <input type="text" id="lname" data-placeholder-t="lname-ph" placeholder="Karimov">
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-t="email-f">Email Address</label>
+        <input type="email" id="email" placeholder="aziz@example.com">
+      </div>
+      <div class="form-group">
+        <label data-t="course-f">Course Interest</label>
+        <select id="course">
+          <option value="" data-t="select-course">Select a course...</option>
+          <option value="cs" data-t="opt-cs">AP Computer Science</option>
+          <option value="stats" data-t="opt-stats">AP Statistics</option>
+          <option value="da" data-t="opt-da">Data Analytics</option>
+          <option value="other" data-t="opt-other">Other / Future Courses</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-t="msg-f">Message</label>
+        <textarea id="msg" data-placeholder-t="msg-ph" placeholder="Tell us about yourself and your goals..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="handleSubmit()" data-t="send-msg">Send Message ✉️</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2024 <span>STEM Education Uz</span>. All rights reserved. 🇺🇿</p>
+  </footer>
+</div>
+
+<script>
+// ============ TRANSLATIONS ============
+const translations = {
+  en: {
+    'badge': '🚀 Launching in Uzbekistan',
+    'hero-title': 'Future Starts',
+    'hero-subtitle': 'Here & Now.',
+    'hero-desc': 'World-class STEM education for the next generation of innovators, engineers, and scientists — available in three languages.',
+    'explore-courses': 'Explore Courses →',
+    'our-story': 'Our Story',
+    'stat-lang': 'Languages',
+    'stat-courses': 'Courses Available',
+    'stat-students': 'Students Enrolled',
+    'stat-instructors': 'Expert Instructors',
+    'why-tag': 'WHY STEM EDUCATION UZ',
+    'why-title': 'Designed for excellence.',
+    'why-desc': 'We combine rigorous AP-level curricula with modern pedagogy, delivered in your native language. Our platform is built for Uzbekistan\'s brightest minds.',
+    'feat1-title': 'Trilingual Platform',
+    'feat1-desc': 'Full support for English, Uzbek, and Russian — switch seamlessly at any time.',
+    'feat2-title': 'AP-Level Curriculum',
+    'feat2-desc': 'College Board aligned courses that prepare students for international academic success.',
+    'feat3-title': 'Live & Async Learning',
+    'feat3-desc': 'Flexible scheduling for live sessions and on-demand content to fit your lifestyle.',
+    'about-tag': 'OUR MISSION',
+    'about-title': 'Empowering Uzbekistan Through STEM.',
+    'about-desc': 'We believe every student in Uzbekistan deserves access to world-class science, technology, engineering, and mathematics education — in their own language.',
+    'mission-title': 'Our Mission', 'mission-desc': 'To democratize high-quality STEM education across Uzbekistan, removing language barriers and geographic limitations so every student can reach their full potential.',
+    'vision-title': 'Our Vision', 'vision-desc': 'A future where Uzbekistan is a global hub for scientific innovation, powered by a generation of students who learned to think critically.',
+    'approach-title': 'Our Approach', 'approach-desc': 'We combine the rigor of AP curriculum with culturally relevant teaching methods, delivered by expert instructors who understand the Uzbek education landscape.',
+    'impact-title': 'Our Impact', 'impact-desc': 'Since our founding, we have helped hundreds of students achieve top scores and gain admission to leading universities worldwide.',
+    'values-tag': 'CORE VALUES', 'values-title': 'What we stand for.',
+    'val1': 'Critical Thinking', 'val1d': 'We teach students how to think, not what to think.',
+    'val2': 'Inclusivity', 'val2d': 'Education for everyone, regardless of background.',
+    'val3': 'Rigor', 'val3d': 'High standards that prepare students for global competition.',
+    'val4': 'Innovation', 'val4d': 'Always improving our methods and technology.',
+    'val5': 'Multilingualism', 'val5d': 'Honoring Uzbekistan\'s linguistic diversity.',
+    'val6': 'Excellence', 'val6d': 'Striving for the best in everything we do.',
+    'team-tag': 'THE TEAM', 'team-title': 'Meet the educators.',
+    'role-cs': 'Lead CS Instructor', 'role-stats': 'Statistics Lead', 'role-data': 'Data Analytics', 'role-curr': 'Curriculum Director',
+    'courses-tag': 'OUR CURRICULUM', 'courses-title': 'Courses built for your future.',
+    'courses-desc': 'Each course follows the College Board\'s AP framework — rigorous, internationally recognized, and designed to open doors to top universities.',
+    'cs-title': 'AP Computer Science', 'cs-desc': 'Master the fundamentals of programming with Java, explore object-oriented design, data structures, algorithms, and computational thinking.',
+    'stats-title': 'AP Statistics', 'stats-desc': 'Develop skills in collecting, analyzing, and drawing conclusions from data. Learn probability, statistical inference, and how to think statistically.',
+    'da-title': 'Data Analytics', 'da-desc': 'Learn to extract insights from real-world datasets using Python, pandas, and visualization libraries. Build projects that demonstrate real-world skills.',
+    'enroll': 'Enroll Now', 'level-inter': 'Intermediate', 'level-beg': 'Beginner Friendly',
+    'soon-title': 'More Courses Coming Soon', 'soon-desc': 'AP Calculus, AP Physics, AP Chemistry, Machine Learning & AI — building the most comprehensive STEM catalog in Central Asia.',
+    'notify-me': 'Notify Me →',
+    'contact-tag': 'GET IN TOUCH', 'contact-title': 'Let\'s talk about your future.',
+    'contact-desc': 'Whether you\'re a student, parent, or partner institution — we\'d love to hear from you.',
+    'email-label': 'Email', 'phone-label': 'Phone', 'addr-label': 'Location', 'hours-label': 'Hours', 'hours-val': 'Mon–Fri, 9AM – 6PM (UZT)',
+    'form-title': 'Send us a message', 'fname': 'First Name', 'lname': 'Last Name', 'email-f': 'Email Address',
+    'course-f': 'Course Interest', 'msg-f': 'Message', 'send-msg': 'Send Message ✉️',
+    'fname-ph': 'Aziz', 'lname-ph': 'Karimov', 'msg-ph': 'Tell us about yourself and your goals...',
+    'select-course': 'Select a course...', 'opt-cs': 'AP Computer Science', 'opt-stats': 'AP Statistics', 'opt-da': 'Data Analytics', 'opt-other': 'Other / Future Courses',
+  },
+  uz: {
+    'badge': '🚀 O\'zbekistonda ishga tushmoqda',
+    'hero-title': 'Kelajak boshlanadi',
+    'hero-subtitle': 'Shu yerda.',
+    'hero-desc': 'Yangi avlod innovatorlari, muhandislari va olimlari uchun jahon darajasidagi STEM ta\'limi — uch tilda.',
+    'explore-courses': 'Kurslarni ko\'rish →',
+    'our-story': 'Bizning hikoyamiz',
+    'stat-lang': 'Tillar',
+    'stat-courses': 'Mavjud kurslar',
+    'stat-students': 'O\'quvchilar',
+    'stat-instructors': 'Mutaxassis o\'qituvchilar',
+    'why-tag': 'NIMA UCHUN STEM EDUCATION UZ',
+    'why-title': 'Mukammallik uchun yaratilgan.',
+    'why-desc': 'Biz qat\'iy AP darajasidagi o\'quv dasturlarini zamonaviy pedagogika bilan birlashtiramiz, ona tilingizda etkazamiz.',
+    'feat1-title': 'Ko\'p tilli platforma',
+    'feat1-desc': 'Ingliz, o\'zbek va rus tillarini to\'liq qo\'llab-quvvatlash.',
+    'feat2-title': 'AP darajasidagi o\'quv dasturi',
+    'feat2-desc': 'College Board bilan muvofiq kurslar xalqaro muvaffaqiyatga tayyorlaydi.',
+    'feat3-title': 'Jonli va asinxron ta\'lim',
+    'feat3-desc': 'Hayotingizga mos jonli suhbatlar va talab bo\'yicha kontent.',
+    'about-tag': 'BIZNING MAQSADIMIZ',
+    'about-title': 'O\'zbekistonni STEM orqali kuchaytiramiz.',
+    'about-desc': 'Biz O\'zbekistondagi har bir o\'quvchi dunyo darajasidagi ta\'limga — o\'z tilida ega bo\'lishga haqli deb hisoblaymiz.',
+    'mission-title': 'Bizning vazifamiz', 'mission-desc': 'O\'zbekiston bo\'ylab sifatli STEM ta\'limini demokratlashtirish, til to\'siqlarini va geografik cheklovlarni bartaraf etish.',
+    'vision-title': 'Bizning ko\'rishimiz', 'vision-desc': 'O\'zbekiston ilmiy innovatsiyalar markazi bo\'lgan kelajak — tanqidiy fikrlashni o\'rgangan talabalar avlodi tomonidan.',
+    'approach-title': 'Bizning yondashuvimiz', 'approach-desc': 'AP dasturining qat\'iyligini madaniy jihatdan dolzarb o\'qitish usullari bilan birlashtiramiz.',
+    'impact-title': 'Bizning ta\'sirimiz', 'impact-desc': 'Tashkil etilganimizdan buyon biz yuzlab o\'quvchilarga yuqori ball olish va dunyo universitetlariga kirishda yordam berdik.',
+    'values-tag': 'ASOSIY QADRIYATLAR', 'values-title': 'Biz nimani yoqlaymiz.',
+    'val1': 'Tanqidiy fikrlash', 'val1d': 'Biz o\'quvchilarga qanday fikrlashni o\'rgatamiz.',
+    'val2': 'Inklyuzivlik', 'val2d': 'Kelib chiqishidan qat\'iy nazar hamma uchun ta\'lim.',
+    'val3': 'Qat\'iylik', 'val3d': 'O\'quvchilarni global raqobatga tayyorlash.',
+    'val4': 'Innovatsiya', 'val4d': 'Usullar va texnologiyani doimo takomillashtirish.',
+    'val5': 'Ko\'p tillilik', 'val5d': 'O\'zbekiston til xilma-xilligini hurmat qilish.',
+    'val6': 'Mukammallik', 'val6d': 'Qilgan barcha ishimizda eng yaxshisiga intilish.',
+    'team-tag': 'JAMOA', 'team-title': 'O\'qituvchilar bilan tanishing.',
+    'role-cs': 'Bosh CS o\'qituvchisi', 'role-stats': 'Statistika bo\'limi', 'role-data': 'Ma\'lumotlar tahlili', 'role-curr': 'O\'quv dasturi direktori',
+    'courses-tag': 'BIZNING DASTUR', 'courses-title': 'Kelajagingiz uchun kurslar.',
+    'courses-desc': 'Har bir kurs College Board AP dasturiga mos keladi — qat\'iy, xalqaro tan olingan va yetakchi universitetlarga yo\'l ochish uchun mo\'ljallangan.',
+    'cs-title': 'AP Kompyuter Fanlari', 'cs-desc': 'Java bilan dasturlash asoslarini o\'rganing, ob\'ektga yo\'naltirilgan dizayn, ma\'lumotlar tuzilmalari va algoritmlarni o\'rganing.',
+    'stats-title': 'AP Statistika', 'stats-desc': 'Ma\'lumotlarni to\'plash, tahlil qilish va xulosalar chiqarish ko\'nikmalarini rivojlantiring.',
+    'da-title': 'Ma\'lumotlar Tahlili', 'da-desc': 'Python, pandas va vizualizatsiya kutubxonalaridan foydalanib real hayot ma\'lumotlaridan tushunchalar chiqarishni o\'rganing.',
+    'enroll': 'Hoziroq yoziling', 'level-inter': 'O\'rta daraja', 'level-beg': 'Boshlang\'ichlar uchun',
+    'soon-title': 'Ko\'proq kurslar tez orada', 'soon-desc': 'AP Kalkulyus, AP Fizika, AP Kimyo, Mashina O\'rganish va AI — Markaziy Osiyodagi eng keng qamrovli STEM katalogi.',
+    'notify-me': 'Xabar bering →',
+    'contact-tag': 'BOG\'LANISH', 'contact-title': 'Kelajagingiz haqida suhbatlashaylik.',
+    'contact-desc': 'Siz o\'quvchi, ota-ona yoki hamkor muassasasiz — biz sizdan eshitishni xohlaymiz.',
+    'email-label': 'Elektron pochta', 'phone-label': 'Telefon', 'addr-label': 'Manzil', 'hours-label': 'Ish vaqti', 'hours-val': 'Du–Ju, 9:00 – 18:00 (UZT)',
+    'form-title': 'Bizga xabar yuboring', 'fname': 'Ism', 'lname': 'Familiya', 'email-f': 'Elektron pochta',
+    'course-f': 'Kurs qiziqishi', 'msg-f': 'Xabar', 'send-msg': 'Xabar yuborish ✉️',
+    'fname-ph': 'Aziz', 'lname-ph': 'Karimov', 'msg-ph': 'O\'zingiz va maqsadlaringiz haqida gapirib bering...',
+    'select-course': 'Kursni tanlang...', 'opt-cs': 'AP Kompyuter Fanlari', 'opt-stats': 'AP Statistika', 'opt-da': 'Ma\'lumotlar Tahlili', 'opt-other': 'Boshqa / Kelajak kurslar',
+  },
+  ru: {
+    'badge': '🚀 Запуск в Узбекистане',
+    'hero-title': 'Будущее начинается',
+    'hero-subtitle': 'Здесь и сейчас.',
+    'hero-desc': 'Образование мирового уровня в области STEM для следующего поколения инноваторов, инженеров и учёных — на трёх языках.',
+    'explore-courses': 'Смотреть курсы →',
+    'our-story': 'Наша история',
+    'stat-lang': 'Языка',
+    'stat-courses': 'Курсов',
+    'stat-students': 'Студентов',
+    'stat-instructors': 'Экспертов',
+    'why-tag': 'ПОЧЕМУ STEM EDUCATION UZ',
+    'why-title': 'Создано для совершенства.',
+    'why-desc': 'Мы объединяем строгие учебные программы уровня AP с современной педагогикой, на вашем родном языке.',
+    'feat1-title': 'Трёхъязычная платформа',
+    'feat1-desc': 'Полная поддержка английского, узбекского и русского языков.',
+    'feat2-title': 'Программа уровня AP',
+    'feat2-desc': 'Курсы, согласованные с College Board, готовят к международному успеху.',
+    'feat3-title': 'Живое и асинхронное обучение',
+    'feat3-desc': 'Гибкое расписание для живых сессий и контента по запросу.',
+    'about-tag': 'НАША МИССИЯ',
+    'about-title': 'Развиваем Узбекистан через STEM.',
+    'about-desc': 'Мы верим, что каждый студент в Узбекистане заслуживает доступа к образованию мирового уровня — на своём языке.',
+    'mission-title': 'Наша миссия', 'mission-desc': 'Демократизировать качественное STEM-образование по всему Узбекистану, устраняя языковые барьеры.',
+    'vision-title': 'Наше видение', 'vision-desc': 'Будущее, в котором Узбекистан является мировым центром научных инноваций.',
+    'approach-title': 'Наш подход', 'approach-desc': 'Мы сочетаем строгость программы AP с культурно релевантными методами обучения.',
+    'impact-title': 'Наш вклад', 'impact-desc': 'С момента основания мы помогли сотням студентов поступить в ведущие университеты мира.',
+    'values-tag': 'ОСНОВНЫЕ ЦЕННОСТИ', 'values-title': 'Что мы отстаиваем.',
+    'val1': 'Критическое мышление', 'val1d': 'Мы учим студентов думать, а не что думать.',
+    'val2': 'Инклюзивность', 'val2d': 'Образование для всех, независимо от происхождения.',
+    'val3': 'Строгость', 'val3d': 'Высокие стандарты для глобальной конкуренции.',
+    'val4': 'Инновации', 'val4d': 'Постоянное совершенствование методов и технологий.',
+    'val5': 'Многоязычность', 'val5d': 'Уважение к языковому разнообразию Узбекистана.',
+    'val6': 'Совершенство', 'val6d': 'Стремление к лучшему во всём, что мы делаем.',
+    'team-tag': 'КОМАНДА', 'team-title': 'Познакомьтесь с педагогами.',
+    'role-cs': 'Ведущий преподаватель CS', 'role-stats': 'Руководитель по статистике', 'role-data': 'Аналитика данных', 'role-curr': 'Директор учебных программ',
+    'courses-tag': 'НАША ПРОГРАММА', 'courses-title': 'Курсы для вашего будущего.',
+    'courses-desc': 'Каждый курс соответствует программе AP College Board — строгой, международно признанной и открывающей двери в ведущие университеты.',
+    'cs-title': 'AP Информатика', 'cs-desc': 'Освойте основы программирования на Java, объектно-ориентированное проектирование, структуры данных и алгоритмы.',
+    'stats-title': 'AP Статистика', 'stats-desc': 'Развивайте навыки сбора, анализа данных и формулировки выводов. Изучите теорию вероятностей и статистический вывод.',
+    'da-title': 'Анализ данных', 'da-desc': 'Научитесь извлекать инсайты из реальных наборов данных с помощью Python, pandas и библиотек визуализации.',
+    'enroll': 'Записаться', 'level-inter': 'Средний уровень', 'level-beg': 'Для начинающих',
+    'soon-title': 'Больше курсов скоро', 'soon-desc': 'AP Математика, AP Физика, AP Химия, Машинное обучение и ИИ — самый обширный каталог STEM в Центральной Азии.',
+    'notify-me': 'Уведомить меня →',
+    'contact-tag': 'СВЯЗАТЬСЯ', 'contact-title': 'Поговорим о вашем будущем.',
+    'contact-desc': 'Будь вы студентом, родителем или партнёром — мы рады вас слышать.',
+    'email-label': 'Электронная почта', 'phone-label': 'Телефон', 'addr-label': 'Адрес', 'hours-label': 'Часы работы', 'hours-val': 'Пн–Пт, 9:00 – 18:00 (UZT)',
+    'form-title': 'Напишите нам', 'fname': 'Имя', 'lname': 'Фамилия', 'email-f': 'Электронная почта',
+    'course-f': 'Интерес к курсу', 'msg-f': 'Сообщение', 'send-msg': 'Отправить ✉️',
+    'fname-ph': 'Азиз', 'lname-ph': 'Каримов', 'msg-ph': 'Расскажите о себе и своих целях...',
+    'select-course': 'Выберите курс...', 'opt-cs': 'AP Информатика', 'opt-stats': 'AP Статистика', 'opt-da': 'Анализ данных', 'opt-other': 'Другое / Будущие курсы',
+  }
+};
+
+let currentLang = 'en';
+let currentPage = 'home';
+let isLight = false;
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const t = translations[currentLang];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-placeholder-t]').forEach(el => {
+    const key = el.getAttribute('data-placeholder-t');
+    if (t[key]) el.placeholder = t[key];
+  });
+  // Select options
+  document.querySelectorAll('option[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key]) el.textContent = t[key];
+  });
+}
+
+function showPage(page) {
+  if (page === currentPage) return;
+  const transition = document.getElementById('pageTransition');
+  transition.classList.add('active');
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.getElementById(`nav-${page}`).classList.add('active');
+    currentPage = page;
+    window.scrollTo(0, 0);
+    transition.classList.add('exit');
+    setTimeout(() => { transition.classList.remove('active', 'exit'); }, 400);
+    observeFadeIns();
+    if (page === 'home') animateCounters();
+  }, 300);
+  return false;
+}
+
+function toggleTheme() {
+  isLight = !isLight;
+  document.body.classList.toggle('light-mode', isLight);
+  document.getElementById('themeLabel').textContent = isLight ? '☀️' : '🌙';
+}
+
+// Counter animation
+function animateCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.getAttribute('data-count'));
+    let current = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.round(current) + (target > 10 ? '+' : '');
+      if (current >= target) clearInterval(timer);
+    }, 30);
+  });
+}
+
+// Fade-in on scroll
+function observeFadeIns() {
+  const els = document.querySelectorAll('.fade-in:not(.visible)');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => obs.observe(el));
+}
+
+// Cursor
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursorFollower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+function animateFollower() {
+  fx += (mx - fx) * 0.12; fy += (my - fy) * 0.12;
+  follower.style.left = fx + 'px'; follower.style.top = fy + 'px';
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+// Particles
+function createParticle() {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 4 + 1;
+  const colors = ['rgba(10,132,255,0.5)', 'rgba(191,90,242,0.5)', 'rgba(48,209,88,0.5)'];
+  p.style.cssText = `width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*3)]};left:${Math.random()*100}vw;animation-duration:${Math.random()*15+8}s;animation-delay:${Math.random()*5}s;`;
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 25000);
+}
+setInterval(createParticle, 1200);
+
+function handleSubmit() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  animateCounters();
+  observeFadeIns();
+  applyTranslations();
+});
+</script>
+</body>
+</html>
